@@ -1,7 +1,7 @@
 {
 	"name": "sanatorium/analytics",
 	"type": "platform-extension",
-	"description": "Package to retrieve Google Analytics data",
+	"description": "Package to retrieve Google Analytics data for Cartalyst Platform",
 	"authors": [
 		{
 			"name": "Sanatorium",
