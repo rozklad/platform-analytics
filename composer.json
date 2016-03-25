@@ -35,7 +35,7 @@
 			"database/seeds"
 		],
 		"psr-4": {
-			"Sanatorium\\Codemirror\\": "src/"
+			"Sanatorium\\Analytics\\": "src/"
 		}
 	},
 	"minimum-stability": "dev",
