@@ -12,8 +12,6 @@ class AnalyticsServiceProvider extends ServiceProvider {
 	{
 		$this->registerSpatieAnalyticsPackage();
 
-		define('SANATORIUM_ANALYTICS', true);
-
 		$this->prepareResources();
 
 		// Register all the default hooks

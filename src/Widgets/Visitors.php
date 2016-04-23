@@ -13,14 +13,15 @@ class Visitors extends Controller {
 	{
 		$this->config = $config;
 
-		/*if ( !$this->checkConfiguration() ) 
+		if ( !$this->checkConfiguration() )
 		{
 			$this->configured = false;
 
 			return $this->error('configuration');
-		}*/
-		
-		$this->configured = true;
+		} else
+		{
+			$this->configured = true;
+		}
 	}
 
 	public function getVisitorsAndPageViews($days = 7)
