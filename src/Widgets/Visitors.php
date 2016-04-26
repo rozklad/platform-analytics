@@ -382,7 +382,7 @@ class Visitors extends Controller {
     	return true;
 	}
 
-	public function error($type = null)
+	public function error($type =\ null)
 	{
 		$tests = $this->checkConfiguration(true);
 
