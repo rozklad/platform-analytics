@@ -3,9 +3,11 @@
 return [
 	
 	'pageviews' => 'Zobrazení stránek',
+	'pageviews_previous' => 'Zobrazení stránek minulé období',
 	'pageviews_short_desc' => '(pageviews)',
 	'pageviews_desc' => 'Zobrazením stránek se rozumí akce zobrazení na sledovaném umístění. Jeden návštěvník zobrazí 1 a více stránek.',
 	'visitors' => 'Návštěvníci',
+	'visitors_previous' => 'Návštěvníci minulé období',
 	'visitors_short_desc' => '(visitors)',
 	'visitors_desc' => 'Návštěvníkem se rozumí přístup z jedné IP adresy v rámci sledovaného rozmezí času (zpravidla 30 minut).',
 

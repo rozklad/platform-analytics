@@ -13,166 +13,185 @@
 @parent
 <script type="text/javascript">
 
+	// Cache retrieved data
+	window.visitors_graph_data = {};
+	window.visitors_graph_loaded = false;
+	window.visitors_graph_current = null;
+
+	var data = getVisitorsAndPageviewsData({{ $days }});
+
+	// Create chart
+	var chart = nv.models.lineChart()
+		@if ( config('sanatorium-analytics.visitors_and_pageviews.curved_line') )
+		.interpolate('{{ config('sanatorium-analytics.visitors_and_pageviews.curved_line') }}')
+		@endif
+		.x(function(d) {
+			return d[0]
+		})
+		.y(function(d) {
+			return d[1]
+		})
+		.color([
+			$.Pages.getColor('success'),
+			$.Pages.getColor('danger'),
+			$.Pages.getColor('primary'),
+			$.Pages.getColor('complete'),
+		])
+		.transitionDuration(350)
+		.showLegend(false)
+		.showYAxis({{ config('sanatorium-analytics.visitors_and_pageviews.show_y_axis') ? 'true' : 'false' }})
+		.showXAxis({{ config('sanatorium-analytics.visitors_and_pageviews.show_x_axis') ? 'true' : 'false' }})
+		.margin({
+			left: {{ config('sanatorium-analytics.visitors_and_pageviews.show_y_axis') ? 35 : 0 }},
+			right: {{ config('sanatorium-analytics.visitors_and_pageviews.show_y_axis') ? 35 : 0 }},
+			bottom: {{ config('sanatorium-analytics.visitors_and_pageviews.show_x_axis') ? 35 : 10 }},
+			top: 10,
+		})
+		.useInteractiveGuideline(true);
+
+	// Format of values on X axis
+	chart.xAxis
+			.tickPadding(20)
+			.tickFormat(function(d) {
+				return d3.time.format('%e %B')(new Date(d))
+			});
+
+	// Format of values on Y axis
+	chart.yAxis
+			.tickFormat(d3.format('d'));
+
+	function loadGraph() {
+		var data = window.visitors_graph_current;
+
+		console.log(data);
+
+		// update max and min on Y axis
+		chart.forceY([data.min,data.max]);
+
+		d3.select('.nvd3-line svg')
+				.datum(data.lines)
+				.transition()
+				.duration(1500)
+				.call(chart);
+
+		nv.utils.windowResize(chart.update);
+
+		$('#visitors-and-pageviews').data('chart', chart);
+
+		return chart;
+
+	}
+
+	function getVisitorsAndPageviewsData(days) {
+
+		$.ajax({
+			type: 'GET',
+			url: '{{ route('sanatorium.analytics.data.visitors.and.pageviews') }}',
+			data: {days: days}
+		}).success(function(response){
+
+			window.visitors_graph_data[days] = response;
+			window.visitors_graph_current = response;
+
+			if ( window.visitors_graph_loaded === false ) {
+				nv.addGraph(loadGraph);
+			} else {
+				loadGraph();
+			}
+		});
+
+	}
+
+
 	$(function(){
 
-		//NVD3 Charts
-		d3.json('{{ route('sanatorium.analytics.data.visitors.and.pageviews', $days) }}', function(data) {
+		$('[data-visitors]').click(function(){
 
-	        // line chart
-	        (function() {
-	        	nv.addGraph(function() {
-	        		var chart = nv.models.lineChart()
-	        		.x(function(d) {
-	        			return d[0]
-	        		})
-	        		.y(function(d) {
-	        			return d[1]
-	        		})
-	        		.color([
-	        			$.Pages.getColor('success'),
-	        			$.Pages.getColor('danger'),
-	        			$.Pages.getColor('primary'),
-	        			$.Pages.getColor('complete'),
+			var days = $(this).data('visitors');
 
-	        			])
-	        		.showLegend(false)
-	        		.margin({
-	        			left: 30,
-	        			bottom: 35
-	        		})
-	        		.useInteractiveGuideline(true);
-
-	        		chart.xAxis
-	        		.tickFormat(function(d) {
-	        			return d3.time.format('%e %B')(new Date(d))
-	        		});
-
-	        		chart.yAxis.tickFormat(d3.format('d'));
-
-	        		// update max and min on Y axis
-	        		chart.forceY([data.min,data.max]);
-
-	        		d3.select('.nvd3-line svg')
-	        		.datum(data.lines)
-	        		.transition().duration(500)
-	        		.call(chart);
-
-	        		nv.utils.windowResize(chart.update);
-
-	        		$('#visitors-and-pageviews').data('chart', chart);
-
-	        		return chart;
-	        	});
-	        })();
-	    });
+			if ( typeof window.visitors_graph_data[days] === 'undefined' ) {
+				window.visitors_graph_data[days] = getVisitorsAndPageviewsData(days);
+			} else {
+				window.visitors_graph_current = window.visitors_graph_data[days];
+				loadGraph();
+			}
+		});
 
 	});
+
+
 </script>
 @stop
 
-<!-- START WIDGET -->
+@section('styles')
+@parent
+<style type="text/css">
+	.graph-overlay,
+	.graph-info-box {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1;
+	}
+	.graph-info-box {
+		width: 20%;
+	}
+	.graph-info-box:nth-child(1) {
+		left: 20%;
+	}
+</style>
+@stop
+
+<div class="graph-overlay">
+	<div class="graph-info-box">
+		<span class="difference">{{ ($extras['visitors_this_period'] > $extras['visitors_before_period']) ? '+' : '-' }} {{ $extras['visitors_difference'] }}</span>
+		<span class="this-period">{{ $extras['visitors_this_period'] }}</span>
+		<span class="before-period">{{ $extras['visitors_before_period'] }}</span>
+	</div>
+	<div class="graph-info-box">
+		<span class="difference">{{ ($extras['pageviews_this_period'] > $extras['pageviews_before_period']) ? '+' : '-' }}  {{ $extras['pageviews_difference'] }}</span>
+		<span class="this-period">{{ $extras['pageviews_this_period'] }}</span>
+		<span class="before-period">{{ $extras['pageviews_before_period'] }}</span>
+	</div>
+</div>
+
+<a href="#" data-visitors="7">
+	Last week
+</a>
+
+<a href="#" data-visitors="30" class="active">
+	Last month
+</a>
+
+<a href="#" data-visitors="90">
+	Last quarter
+</a>
+
+<a href="#" data-visitors="365">
+	Last year
+</a>
+
+<!-- Widget: Visitors and pageviews -->
 <div class="row">
-<div class="col-md-12">
-
-<div class="widget-12 panel no-border widget-loader-circle no-margin">
-	<div class="row">
-		<div class="col-xlg-8 ">
-			<div class="panel-heading pull-up top-right ">
-				<div class="panel-controls">
-					<ul>
-						<li class="hidden-xlg">
-							<div class="dropdown">
-								<a data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-									<i class="portlet-icon portlet-icon-settings"></i>
-								</a>
-							</div>
-						</li>
-						<li>
-							<a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i class="portlet-icon portlet-icon-refresh"></i></a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="panel-body">
-		<div class="row">
-			<div class="col-xlg-8 ">
-				<div class="p-l-10">
-					<h2 class="pull-left">{{ trans('sanatorium/analytics::widgets.visitors_and_pageviews.title') }}</h2>
-					<h2 class="pull-left m-l-50 {{ $extras['visitors_difference'] > -1 ? 'text-success' : 'text-danger' }}">
-						<span class="bold" title="{{ trans('sanatorium/analytics::widgets.visitors_and_pageviews.visitors_this_period') }}">{{ $extras['visitors_this_period'] }}</span>
-						<span class="{{ $extras['visitors_difference'] > -1 ? 'text-success' : 'text-danger' }} fs-12" title="{{ trans('sanatorium/analytics::widgets.visitors_and_pageviews.visitors_difference') }}">{{ $extras['visitors_difference'] > -1 ? '+' : '-' }}{{ $extras['visitors_difference'] }}</span>
-					</h2>
-					<div class="clearfix"></div>
-					<div class="full-width">
-						{{--
-						<ul class="list-inline">
-							<li><a href="#" class="font-montserrat text-master">1D</a>
-							</li>
-							<li class="active"><a href="#" class="font-montserrat  bg-master-light text-master">5D</a>
-							</li>
-							<li><a href="#" class="font-montserrat text-master">1M</a>
-							</li>
-							<li><a href="#" class="font-montserrat text-master">1Y</a>
-							</li>
-						</ul>
-						--}}
-					</div>
-					<div class="nvd3-line line-chart text-center" id="visitors-and-pageviews" data-x-grid="false">
-						<svg></svg>
-					</div>
-				</div>
-			</div>
-			<div class="col-xlg-4 visible-xlg">
-				<div class="widget-12-search">
-					<p class="pull-left">{{ trans('sanatorium/analytics::widgets.visitors_and_pageviews.subtitle') }}
-						<span class="bold">{{ trans('sanatorium/analytics::widgets.visitors_and_pageviews.subtitle_bold') }}</span>
-					</p>
-					<div class="clearfix"></div>
-					{{--
-					<input type="text" placeholder="Search list" class="form-control m-t-5">
-					--}}
-				</div>
-				<div class="company-stat-boxes">
-					<div data-index="0" class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
-						<div>
-							<button type="button" class="close" data-dismiss="modal">
-								<i class="pg-close fs-12"></i>
-							</button>
-							<p class="company-name pull-left text-uppercase bold no-margin">
-								<span class="fa fa-circle text-success fs-11"></span> {{ trans('sanatorium/analytics::widgets.visitors') }}
-							</p>
-							<small class="hint-text m-l-10">{{ trans('sanatorium/analytics::widgets.visitors_short_desc') }}</small>
-							<div class="clearfix"></div>
-						</div>
-						<div class="m-t-10">
-							<p class="pull-left small hint-text no-margin p-t-5">{{ trans('sanatorium/analytics::widgets.visitors_desc') }}</p>
-							<div class="clearfix"></div>
-						</div>
-					</div>
-					<div data-index="1" class="company-stat-box m-t-15  padding-20 bg-master-lightest">
-						<div>
-							<button type="button" class="close" data-dismiss="modal">
-								<i class="pg-close fs-12"></i>
-							</button>
-							<p class="company-name pull-left text-uppercase bold no-margin">
-								<span class="fa fa-circle text-danger fs-11"></span> {{ trans('sanatorium/analytics::widgets.pageviews') }}
-							</p>
-							<small class="hint-text m-l-10">{{ trans('sanatorium/analytics::widgets.pageviews_short_desc') }}</small>
-							<div class="clearfix"></div>
-						</div>
-						<div class="m-t-10">
-							<p class="pull-left small hint-text no-margin p-t-5">{{ trans('sanatorium/analytics::widgets.pageviews_desc') }}</p>
-							<div class="clearfix"></div>
-						</div>
-					</div>
-				</div>
-			</div>
+	<div class="col-md-12">
+		<div class="nvd3-line line-chart text-center"
+			 id="visitors-and-pageviews"
+			 data-y-grid="{{ config('sanatorium-analytics.visitors_and_pageviews.show_y_grid') ? 'true' : 'false' }}"
+			 data-x-grid="{{ config('sanatorium-analytics.visitors_and_pageviews.show_x_grid') ? 'true' : 'false' }}"
+			 style="height:50vh">
+			<svg></svg>
 		</div>
 	</div>
 </div>
 
-</div>
-</div>
-<!-- END WIDGET -->
+{{-- trans('sanatorium/analytics::widgets.visitors_and_pageviews.subtitle') --}}
+{{-- trans('sanatorium/analytics::widgets.visitors_and_pageviews.subtitle_bold') --}}
+
+{{-- trans('sanatorium/analytics::widgets.visitors') --}}
+{{-- trans('sanatorium/analytics::widgets.visitors_short_desc') --}}
+{{-- trans('sanatorium/analytics::widgets.visitors_desc') --}}
+
+{{-- trans('sanatorium/analytics::widgets.pageviews') --}}
+{{-- trans('sanatorium/analytics::widgets.pageviews_short_desc') --}}
+{{-- trans('sanatorium/analytics::widgets.pageviews_desc') --}}

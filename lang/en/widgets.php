@@ -3,9 +3,11 @@
 return [
 	
 	'pageviews' => 'Pageviews',
+	'pageviews_previous' => 'Previous interval pageviews',
 	'pageviews_short_desc' => '(pageviews)',
 	'pageviews_desc' => 'Page view is a single action of a user, that requested any tracked page.',
 	'visitors' => 'Visitors',
+	'visitors_previous' => 'Previous interval visitors',
 	'visitors_short_desc' => '(visitors)',
 	'visitors_desc' => 'Visitor is a unique user that visitted a page from a unique IP address in a predefined time span (normally 30 minutes).',
 
