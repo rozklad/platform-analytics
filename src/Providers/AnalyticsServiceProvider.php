@@ -27,7 +27,7 @@ class AnalyticsServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Register cartalyst/cart package
+	 * Register spatie/laravelanalytics package
 	 * @return
 	 */
 	protected function registerSpatieAnalyticsPackage() {
