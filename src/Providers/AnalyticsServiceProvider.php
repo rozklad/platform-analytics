@@ -2,6 +2,8 @@
 
 use Cartalyst\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
+use ReflectionException;
+use Log;
 
 class AnalyticsServiceProvider extends ServiceProvider {
 
@@ -16,6 +18,8 @@ class AnalyticsServiceProvider extends ServiceProvider {
 
 		// Register all the default hooks
         $this->registerHooks();
+
+		$this->registerDashboardWidget();
 	}
 
 	/**
@@ -80,5 +84,18 @@ class AnalyticsServiceProvider extends ServiceProvider {
             $manager->registerHook($position, $hook);
         }
     }
+
+	protected function registerDashboardWidget()
+	{
+		try {
+			// Register the dashboard widget
+			$this->app['sanatorium.dashboards.widgets']->registerService(
+				'visitors_and_pageviews',                           // slug
+				'Sanatorium\Analytics\Widgets\DashboardVisitors'   	// class
+			);
+		} catch (ReflectionException $e) {
+			Log::error('sanatorium/analytics: ' . $e->getMessage());
+		}
+	}
 
 }

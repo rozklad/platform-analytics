@@ -25,7 +25,7 @@ class Visitors extends Controller
 		}
 	}
 
-	public function getVisitorsAndPageViews($days = 7)
+	public function getVisitorsAndPageViews($days = 7, $previous = true)
 	{
 		if ( !$this->checkConfiguration() )
 		{
@@ -35,7 +35,7 @@ class Visitors extends Controller
 		// Total visitors, pageviews and their differences
 		$extras = $this->getExtrasData($days);
 
-		return view('sanatorium/analytics::widgets/visitors_and_pageviews', compact('days', 'extras'));
+		return view('sanatorium/analytics::widgets/visitors_and_pageviews', compact('days', 'extras', 'previous'));
 	}
 
 	public function getVisitorsAndPageViewsData($days = 7, $previous = true)
