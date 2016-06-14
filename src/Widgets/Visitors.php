@@ -412,12 +412,12 @@ class Visitors extends Controller
 		foreach ( $tests as $test )
 		{
 
-			$result = $this->checkConfigurationItem($test);;
+			$result = $this->checkConfigurationItem($test);
 
 			if ( $return )
 			{
 				$results[ $test ] = $result;
-			} else
+			} else if ( !$result )
 			{
 				return $result;
 			}
