@@ -93,6 +93,11 @@ class AnalyticsServiceProvider extends ServiceProvider {
 				'visitors_and_pageviews',                           // slug
 				'Sanatorium\Analytics\Widgets\DashboardVisitors'   	// class
 			);
+
+            $this->app['sanatorium.dashboards.widgets']->registerService(
+                'registrations',                                            // slug
+                'Sanatorium\Analytics\Widgets\DashboardRegistrations'   	// class
+            );
 		} catch (ReflectionException $e) {
 			Log::error('sanatorium/analytics: ' . $e->getMessage());
 		}

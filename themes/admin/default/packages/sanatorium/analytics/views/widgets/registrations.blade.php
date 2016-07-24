@@ -55,7 +55,7 @@
                     .y(function(d) {
                         return d[1]
                     })
-                    .color(['#27cebc'])
+                    .color(['#ed1c24'])
                     .useInteractiveGuideline(true)
                     .margin({
                         top: 10,
@@ -98,59 +98,25 @@
 @stop
 
 <!-- START WIDGET -->
-<div class="panel no-border no-margin widget-loader-circle">
-	<div class="panel-heading">
-		<div class="panel-title">{{ trans('sanatorium/analytics::widgets.registrations.title') }}
-		</div>
-		<div class="panel-controls">
-			<ul>
-				<li><a href="#" class="portlet-refresh text-black" data-toggle="refresh"><i class="portlet-icon portlet-icon-refresh"></i></a>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<div class="widget-16-header padding-20">
-		<span class="icon-thumbnail bg-master-light pull-left text-master">{{ trans('sanatorium/analytics::widgets.registrations.shortcut') }}</span>
-		<div class="pull-left">
-			<p class="hint-text all-caps font-montserrat  small no-margin overflow-ellipsis ">{{ trans('sanatorium/analytics::widgets.registrations.subtitle') }}</p>
-			<h5 class="no-margin overflow-ellipsis ">{{ trans('sanatorium/analytics::widgets.registrations.subtitle_desc') }}</h5>
-		</div>
-		<div class="clearfix"></div>
-	</div>
-	<div class="p-l-25 p-r-45 p-t-25 p-b-25">
-		<div class="row">
-			<div class="col-md-4 ">
-				<p class="hint-text all-caps font-montserrat small no-margin ">{{ trans('sanatorium/analytics::widgets.registrations.users') }}</p>
-				<p class="all-caps font-montserrat  no-margin text-success ">{{ $users_count_total }}</p>
-			</div>
-			<div class="col-md-4 text-center">
-				<p class="hint-text all-caps font-montserrat small no-margin ">{{ trans('sanatorium/analytics::widgets.registrations.registered') }}</p>
-				<p class="all-caps font-montserrat  no-margin text-warning ">{{ $users_count_registered }}</p>
-			</div>
-			<div class="col-md-4 text-right">
-				<p class="hint-text all-caps font-montserrat small no-margin ">{{ trans('sanatorium/analytics::widgets.registrations.admin') }}</p>
-				<p class="all-caps font-montserrat  no-margin text-success ">{{ $users_count_admin }}</p>
-			</div>
-		</div>
-	</div>
-	<div class="relative no-overflow">
-		<div class="registrations-chart line-chart" data-line-color="success" data-points="true" data-point-color="white" data-stroke-width="2">
-			<svg></svg>
-		</div>
-	</div>
-	<div class="b-b b-t b-grey p-l-20 p-r-20 p-b-10 p-t-10">
-		<p class="pull-left">{{ trans('sanatorium/analytics::widgets.registrations.enabled') }}</p>
-		<div class="pull-right">
-			<input type="checkbox" data-init-plugin="switchery" data-settings="platform-users.registration" data-msg="{{ trans('sanatorium/analytics::widgets.registrations.enabled_changed') }}" value="1" {{ config('platform-users.registration') ? 'checked="checked"' : '' }} />
-		</div>
-		<div class="clearfix"></div>
-	</div>
-	<div class="b-b b-grey p-l-20 p-r-20 p-b-10 p-t-10">
-		<p class="pull-left">{{ trans('sanatorium/analytics::widgets.registrations.mail_activation') }}</p>
-		<div class="pull-right">
-			<input type="checkbox" data-init-plugin="switchery" data-settings="platform-users.activation" data-msg="{{ trans('sanatorium/analytics::widgets.registrations.mail_activation_changed') }}" value="email" {{ config('platform-users.activation') == 'email' ? 'checked="checked"' : '' }} />
-		</div>
-		<div class="clearfix"></div>
+<div class="relative no-overflow">
+	<div class="registrations-chart line-chart" data-line-color="success" data-points="true" data-point-color="white" data-stroke-width="2">
+		<svg></svg>
 	</div>
 </div>
+@if ( $options )
+<div class="b-b b-t b-grey p-l-20 p-r-20 p-b-10 p-t-10">
+	<p class="pull-left">{{ trans('sanatorium/analytics::widgets.registrations.enabled') }}</p>
+	<div class="pull-right">
+		<input type="checkbox" data-init-plugin="switchery" data-settings="platform-users.registration" data-msg="{{ trans('sanatorium/analytics::widgets.registrations.enabled_changed') }}" value="1" {{ config('platform-users.registration') ? 'checked="checked"' : '' }} />
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="b-b b-grey p-l-20 p-r-20 p-b-10 p-t-10">
+	<p class="pull-left">{{ trans('sanatorium/analytics::widgets.registrations.mail_activation') }}</p>
+	<div class="pull-right">
+		<input type="checkbox" data-init-plugin="switchery" data-settings="platform-users.activation" data-msg="{{ trans('sanatorium/analytics::widgets.registrations.mail_activation_changed') }}" value="email" {{ config('platform-users.activation') == 'email' ? 'checked="checked"' : '' }} />
+	</div>
+	<div class="clearfix"></div>
+</div>
+@endif
 <!-- END WIDGET -->

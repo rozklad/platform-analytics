@@ -42,4 +42,11 @@ return [
 	'regional' => [
 		'title' => 'Visits by region'
 	],
+
+    'period' => [
+        'week' => 'Last week',
+        'month' => 'Last month',
+        'quarter' => 'Last quarter',
+        'year' => 'Last year',
+    ]
 ];

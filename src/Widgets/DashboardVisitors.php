@@ -1,5 +1,7 @@
 <?php namespace Sanatorium\Analytics\Widgets;
 
+use Widget;
+
 class DashboardVisitors {
 
     /**
@@ -24,7 +26,7 @@ class DashboardVisitors {
         $days = 7;
         $previous = true;
         
-        return widget('sanatorium/analytics::visitors.getVisitorsAndPageViews', compact('days', 'previous'));
+        return Widget::make('sanatorium/analytics::visitors.getVisitorsAndPageViews', compact('days', 'previous'));
     }
     
 }

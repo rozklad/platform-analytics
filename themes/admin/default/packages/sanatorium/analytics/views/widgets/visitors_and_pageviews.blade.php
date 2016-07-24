@@ -32,10 +32,10 @@
 			return d[1]
 		})
 		.color([
-			$.Pages.getColor('success'),
-			$.Pages.getColor('danger'),
-			$.Pages.getColor('primary'),
-			$.Pages.getColor('complete'),
+			'#198C19',
+			'#FF1919',
+			'#1919FF',
+			'#FFFF19',
 		])
 		.transitionDuration(350)
 		.showLegend(false)
@@ -53,7 +53,7 @@
 	chart.xAxis
 			.tickPadding(20)
 			.tickFormat(function(d) {
-				return d3.time.format('%e %B')(new Date(d))
+				return d3.time.format('%d.%m.')(new Date(d))
 			});
 
 	// Format of values on Y axis
@@ -62,8 +62,6 @@
 
 	function loadGraph() {
 		var data = window.visitors_graph_current;
-
-		console.log(data);
 
 		// update max and min on Y axis
 		chart.forceY([data.min,data.max]);
@@ -125,52 +123,53 @@
 
 @section('styles')
 @parent
-<style type="text/css">
-	.graph-overlay,
-	.graph-info-box {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 1;
-	}
-	.graph-info-box {
-		width: 20%;
-	}
-	.graph-info-box:nth-child(1) {
-		left: 20%;
-	}
-</style>
 @stop
 
-<div class="graph-overlay">
-	<div class="graph-info-box">
-		<span class="difference">{{ ($extras['visitors_this_period'] > $extras['visitors_before_period']) ? '+' : '-' }} {{ $extras['visitors_difference'] }}</span>
-		<span class="this-period">{{ $extras['visitors_this_period'] }}</span>
-		<span class="before-period">{{ $extras['visitors_before_period'] }}</span>
+<div class="row">
+	<div class="col-xs-8">
+		<div class="graph-overlay hidden">
+			<div class="graph-info-box">
+				<span class="difference">{{ ($extras['visitors_this_period'] > $extras['visitors_before_period']) ? '+' : '-' }} {{ $extras['visitors_difference'] }}</span>
+				<span class="this-period">{{ $extras['visitors_this_period'] }}</span>
+				<span class="before-period">{{ $extras['visitors_before_period'] }}</span>
+			</div>
+			<div class="graph-info-box">
+				<span class="difference">{{ ($extras['pageviews_this_period'] > $extras['pageviews_before_period']) ? '+' : '-' }}  {{ $extras['pageviews_difference'] }}</span>
+				<span class="this-period">{{ $extras['pageviews_this_period'] }}</span>
+				<span class="before-period">{{ $extras['pageviews_before_period'] }}</span>
+			</div>
+		</div>
 	</div>
-	<div class="graph-info-box">
-		<span class="difference">{{ ($extras['pageviews_this_period'] > $extras['pageviews_before_period']) ? '+' : '-' }}  {{ $extras['pageviews_difference'] }}</span>
-		<span class="this-period">{{ $extras['pageviews_this_period'] }}</span>
-		<span class="before-period">{{ $extras['pageviews_before_period'] }}</span>
+	<div class="col-xs-4">
+		<div class="dropdown pull-right">
+			<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-link">
+				<i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+			</button>
+			<ul class="dropdown-menu">
+				<li>
+					<a href="#" data-visitors="7">
+						{{ trans('sanatorium/analytics::widgets.period.week') }}
+					</a>
+				</li>
+				<li>
+					<a href="#" data-visitors="30" class="active">
+						{{ trans('sanatorium/analytics::widgets.period.month') }}
+					</a>
+				</li>
+				<li>
+					<a href="#" data-visitors="90">
+						{{ trans('sanatorium/analytics::widgets.period.quarter') }}
+					</a>
+				</li>
+				<li>
+					<a href="#" data-visitors="365">
+						{{ trans('sanatorium/analytics::widgets.period.year') }}
+					</a>
+				</li>
+			</ul>
+		</div>
 	</div>
 </div>
-
-<a href="#" data-visitors="7">
-	Last week
-</a>
-
-<a href="#" data-visitors="30" class="active">
-	Last month
-</a>
-
-<a href="#" data-visitors="90">
-	Last quarter
-</a>
-
-<a href="#" data-visitors="365">
-	Last year
-</a>
 
 <!-- Widget: Visitors and pageviews -->
 <div class="row">
@@ -184,14 +183,3 @@
 		</div>
 	</div>
 </div>
-
-{{-- trans('sanatorium/analytics::widgets.visitors_and_pageviews.subtitle') --}}
-{{-- trans('sanatorium/analytics::widgets.visitors_and_pageviews.subtitle_bold') --}}
-
-{{-- trans('sanatorium/analytics::widgets.visitors') --}}
-{{-- trans('sanatorium/analytics::widgets.visitors_short_desc') --}}
-{{-- trans('sanatorium/analytics::widgets.visitors_desc') --}}
-
-{{-- trans('sanatorium/analytics::widgets.pageviews') --}}
-{{-- trans('sanatorium/analytics::widgets.pageviews_short_desc') --}}
-{{-- trans('sanatorium/analytics::widgets.pageviews_desc') --}}

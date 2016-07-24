@@ -42,4 +42,11 @@ return [
 	'regional' => [
 		'title' => 'Návštěvnost podle regionu'
 	],
+
+    'period' => [
+        'week' => 'Poslední týden',
+        'month' => 'Poslední měsíc',
+        'quarter' => 'Poslední čtvrtletí',
+        'year' => 'Poslední rok',
+    ]
 ];

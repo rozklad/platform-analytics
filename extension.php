@@ -67,7 +67,7 @@ return [
 	|
 	*/
 
-	'version' => '1.2.4',
+	'version' => '1.2.5',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -150,8 +150,8 @@ return [
 			], function(){
 
 				Route::get('vistorsandpageviews/{days}', ['as' => 'sanatorium.analytics.data.visitors.and.pageviews', 'uses' => 'Widgets\Visitors@getVisitorsAndPageViewsData'] );
-				Route::post('registrations/settings', ['as' => 'sanatorium.analytics.registrations.settings', 'uses' => 'Widgets\Visitors@settings'] );
-				Route::get('registrations/data/{days}', ['as' => 'sanatorium.analytics.data.registrations', 'uses' => 'Widgets\Visitors@getRegistrationsData'] );
+				Route::post('registrations/settings', ['as' => 'sanatorium.analytics.registrations.settings', 'uses' => 'Widgets\Registrations@settings'] );
+				Route::get('registrations/data/{days}', ['as' => 'sanatorium.analytics.data.registrations', 'uses' => 'Widgets\Registrations@getRegistrationsData'] );
 
 				Route::get('repair/certificate', ['as' => 'sanatorium.analytics.repair.certificate', 'uses' => 'Widgets\Visitors@repairCertificate'] );
 
