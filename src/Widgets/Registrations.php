@@ -67,7 +67,7 @@ class Registrations extends Controller
         return [
             'registrations' => [
                 [
-                    'key'    => 'Registrations',
+                    'key'    => 'Profiles',
                     'values' => $results,
                 ],
             ],
