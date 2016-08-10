@@ -10,6 +10,11 @@ class DashboardVisitors {
     const NAME = 'Analytics: Visitors & pageviews';
 
     /**
+     * Show wrapper around this widget
+     */
+    const HAS_WRAPPER = true;
+
+    /**
      * Widget configuration on dashboard
      * @var array
      */

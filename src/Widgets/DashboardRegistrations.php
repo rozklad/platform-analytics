@@ -10,6 +10,11 @@ class DashboardRegistrations {
     const NAME = 'Analytics: Registrations';
 
     /**
+     * Show wrapper around this widget
+     */
+    const HAS_WRAPPER = true;
+
+    /**
      * Widget configuration on dashboard
      * @var array
      */
